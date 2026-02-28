@@ -192,13 +192,23 @@
   }
 
   /* TABLE */
+  .table-scroll-outer {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border: 1px solid rgba(0, 245, 255, 0.15);
+    border-radius: 4px;
+    box-shadow: 0 0 40px rgba(0, 245, 255, 0.05);
+  }
+  .table-scroll-outer::-webkit-scrollbar { height: 5px; }
+  .table-scroll-outer::-webkit-scrollbar-track { background: rgba(0,245,255,0.05); }
+  .table-scroll-outer::-webkit-scrollbar-thumb { background: rgba(0,245,255,0.4); border-radius: 3px; }
+
   .table-wrapper {
     background: var(--panel-bg);
-    border: 1px solid rgba(0, 245, 255, 0.15);
     border-radius: 4px;
     overflow: visible;
     backdrop-filter: blur(10px);
-    box-shadow: 0 0 40px rgba(0, 245, 255, 0.05);
+    min-width: 700px;
   }
 
   .table-header {
@@ -485,8 +495,8 @@
   }
 
   @keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(5px); }
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(5px); }
   }
 
   @keyframes hintPulse {
@@ -522,12 +532,8 @@
   .refresh-btn.spinning .btn-icon { animation: spin 1s linear infinite; display: inline-block; }
 
   @media (max-width: 700px) {
-    .table-header, .station-row {
-      grid-template-columns: 2fr 1fr 1fr;
-    }
-    .th:nth-child(4), .th:nth-child(5),
-    .cell:nth-child(4), .cell:nth-child(5) { display: none; }
     h1 { font-size: 1.8rem; }
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
   }
 </style>
 </head>
@@ -600,12 +606,13 @@
 
   <!-- SCROLL HINT -->
   <div class="scroll-hint">
-    <span class="arrow">↕</span>
+    <span class="arrow">←</span>
     Desliza la pantalla para ver todo el contenido
-    <span class="arrow">↕</span>
+    <span class="arrow">→</span>
   </div>
 
   <!-- TABLE -->
+  <div class="table-scroll-outer">
   <div class="table-wrapper" style="position:relative;">
     <div class="corner-deco tl"></div>
     <div class="corner-deco tr"></div>
@@ -626,7 +633,7 @@
         <div class="loading-text">CARGANDO DATOS...</div>
       </div>
     </div>
-  </div>
+  </div><!-- /table-scroll-outer -->
 
 </div>
 
