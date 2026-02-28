@@ -2,627 +2,445 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>PRECIO DEL GASOIL - Oriente de Asturias</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
   :root {
-    --neon-cyan: #00f5ff;
-    --neon-blue: #0080ff;
-    --neon-green: #00ff88;
-    --neon-yellow: #ffdd00;
-    --neon-red: #ff3366;
-    --dark-bg: #020810;
-    --panel-bg: rgba(0, 20, 40, 0.85);
-    --grid-color: rgba(0, 245, 255, 0.06);
-    --text-dim: rgba(0, 245, 255, 0.5);
+    --cyan: #00f5ff;
+    --blue: #0080ff;
+    --green: #00ff88;
+    --yellow: #ffdd00;
+    --red: #ff3366;
+    --bg: #020810;
+    --panel: rgba(0,20,40,0.88);
+    --dim: rgba(0,245,255,0.45);
+    --grid: rgba(0,245,255,0.055);
   }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+  html {
+    width: 100%;
+    overflow-x: hidden;
+  }
 
   body {
-    background: var(--dark-bg);
-    color: var(--neon-cyan);
+    background: var(--bg);
+    color: var(--cyan);
     font-family: 'Share Tech Mono', monospace;
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+    width: 100%;
     overflow-x: hidden;
     overflow-y: auto;
     position: relative;
+    display: flex;
+    flex-direction: column;
   }
 
-  /* Animated grid background */
+  /* Animated grid bg */
   body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
+    content:'';
+    position:fixed; inset:0;
     background-image:
-      linear-gradient(var(--grid-color) 1px, transparent 1px),
-      linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
     background-size: 40px 40px;
-    z-index: 0;
+    z-index:0;
     animation: gridMove 20s linear infinite;
+    pointer-events:none;
+  }
+
+  /* Scanlines */
+  body::after {
+    content:'';
+    position:fixed; inset:0;
+    background: repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.07) 2px,rgba(0,0,0,0.07) 4px);
+    pointer-events:none;
+    z-index:999;
   }
 
   @keyframes gridMove {
-    0% { background-position: 0 0; }
-    100% { background-position: 40px 40px; }
+    from { background-position: 0 0; }
+    to   { background-position: 40px 40px; }
   }
 
-  /* Scanlines overlay */
-  body::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(0,0,0,0.08) 2px,
-      rgba(0,0,0,0.08) 4px
-    );
-    pointer-events: none;
-    z-index: 1000;
-  }
-
-  .container {
+  /* ─── WRAPPER GENERAL (todo menos la tabla) ─── */
+  .page-wrap {
     position: relative;
     z-index: 10;
+    width: 100%;
     max-width: 1100px;
     margin: 0 auto;
-    padding: 20px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+    padding: 16px 16px 0;
   }
 
-  /* HEADER */
-  header {
-    text-align: center;
-    padding: 30px 0 20px;
-    position: relative;
-  }
+  /* ─── HEADER ─── */
+  header { text-align:center; padding:24px 0 16px; }
 
-  .header-line {
-    width: 100%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
-    margin: 10px 0;
-    box-shadow: 0 0 8px var(--neon-cyan);
+  .hline {
+    height:1px;
+    background: linear-gradient(90deg,transparent,var(--cyan),transparent);
+    box-shadow: 0 0 8px var(--cyan);
+    margin: 8px 0;
   }
 
   h1 {
-    font-family: 'Orbitron', sans-serif;
-    font-size: clamp(2rem, 6vw, 4.5rem);
-    font-weight: 900;
-    letter-spacing: 0.15em;
-    color: #fff;
-    text-shadow:
-      0 0 10px var(--neon-cyan),
-      0 0 30px var(--neon-cyan),
-      0 0 60px var(--neon-blue),
-      0 0 100px var(--neon-blue);
+    font-family:'Orbitron',sans-serif;
+    font-size: clamp(1.6rem, 7vw, 4rem);
+    font-weight:900;
+    letter-spacing: 0.1em;
+    color:#fff;
+    text-shadow: 0 0 10px var(--cyan), 0 0 30px var(--cyan), 0 0 60px var(--blue);
     animation: titlePulse 3s ease-in-out infinite;
+    word-break: break-word;
   }
 
   @keyframes titlePulse {
-    0%, 100% { text-shadow: 0 0 10px var(--neon-cyan), 0 0 30px var(--neon-cyan), 0 0 60px var(--neon-blue); }
-    50% { text-shadow: 0 0 20px var(--neon-cyan), 0 0 50px var(--neon-cyan), 0 0 80px var(--neon-blue), 0 0 120px var(--neon-blue); }
+    0%,100% { text-shadow:0 0 10px var(--cyan),0 0 30px var(--cyan),0 0 60px var(--blue); }
+    50%      { text-shadow:0 0 18px var(--cyan),0 0 45px var(--cyan),0 0 80px var(--blue); }
   }
 
   .subtitle {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.9rem;
-    letter-spacing: 0.3em;
-    color: var(--text-dim);
-    margin-top: 8px;
-    text-transform: uppercase;
+    font-family:'Orbitron',sans-serif;
+    font-size: clamp(0.55rem, 2.5vw, 0.85rem);
+    letter-spacing: 0.15em;
+    color: var(--dim);
+    margin-top:6px;
   }
 
-  /* STATUS BAR */
+  /* ─── STATUS BAR ─── */
   .status-bar {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
     flex-wrap: wrap;
-    gap: 10px;
-    padding: 12px 18px;
-    background: var(--panel-bg);
-    border: 1px solid rgba(0, 245, 255, 0.2);
+    gap: 8px;
+    align-items: center;
+    padding: 10px 14px;
+    background: var(--panel);
+    border: 1px solid rgba(0,245,255,0.18);
     border-radius: 4px;
-    margin: 15px 0;
+    margin: 12px 0;
     backdrop-filter: blur(10px);
-    box-shadow: 0 0 20px rgba(0, 245, 255, 0.05), inset 0 0 20px rgba(0, 245, 255, 0.02);
   }
 
   .status-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.8rem;
-    color: var(--text-dim);
+    display:flex; align-items:center; gap:6px;
+    font-size: clamp(0.6rem, 2.2vw, 0.78rem);
+    color: var(--dim);
+    white-space: nowrap;
   }
 
   .status-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--neon-green);
-    box-shadow: 0 0 6px var(--neon-green);
+    width:8px; height:8px; border-radius:50%;
+    background:var(--green); box-shadow:0 0 6px var(--green);
+    flex-shrink:0;
     animation: blink 1.5s ease-in-out infinite;
   }
 
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+  .status-value { color:var(--cyan); font-weight:bold; }
+
+  .refresh-btn {
+    background:transparent;
+    border:1px solid rgba(0,245,255,0.3);
+    color:var(--dim);
+    font-family:'Orbitron',sans-serif;
+    font-size: clamp(0.55rem, 2vw, 0.65rem);
+    letter-spacing:.1em;
+    padding:7px 12px;
+    cursor:pointer;
+    transition:all .3s;
+    border-radius:2px;
+    margin-left:auto;
+    white-space:nowrap;
   }
 
-  .status-value {
-    color: var(--neon-cyan);
-    font-weight: bold;
-  }
+  .refresh-btn:hover { border-color:var(--cyan); color:var(--cyan); box-shadow:0 0 10px rgba(0,245,255,.2); }
+  .refresh-btn.spinning .ico { display:inline-block; animation:spin 1s linear infinite; }
+  @keyframes spin { to { transform:rotate(360deg); } }
 
-  /* FILTER BAR */
-  .filter-bar {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 15px;
-    flex-wrap: wrap;
-  }
-
-  .filter-btn {
-    background: transparent;
-    border: 1px solid rgba(0, 245, 255, 0.3);
-    color: var(--text-dim);
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.7rem;
-    letter-spacing: 0.1em;
-    padding: 8px 16px;
-    cursor: pointer;
-    transition: all 0.3s;
-    border-radius: 2px;
-  }
-
-  .filter-btn:hover, .filter-btn.active {
-    background: rgba(0, 245, 255, 0.1);
-    border-color: var(--neon-cyan);
-    color: var(--neon-cyan);
-    box-shadow: 0 0 12px rgba(0, 245, 255, 0.3);
-  }
-
-  /* TABLE */
-  .table-scroll-outer {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    border: 1px solid rgba(0, 245, 255, 0.15);
-    border-radius: 4px;
-    box-shadow: 0 0 40px rgba(0, 245, 255, 0.05);
-    /* Stretch to full width ignoring parent padding */
-    margin-left: -20px;
-    margin-right: -20px;
-    border-radius: 0;
-  }
-  .table-scroll-outer::-webkit-scrollbar { height: 5px; }
-  .table-scroll-outer::-webkit-scrollbar-track { background: rgba(0,245,255,0.05); }
-  .table-scroll-outer::-webkit-scrollbar-thumb { background: rgba(0,245,255,0.4); border-radius: 3px; }
-
-  .table-wrapper {
-    background: var(--panel-bg);
-    border-radius: 4px;
-    overflow: visible;
-    backdrop-filter: blur(10px);
-    min-width: 700px;
-  }
-
-  .table-header {
-    display: grid;
-    grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr;
-    gap: 0;
-    background: rgba(0, 245, 255, 0.08);
-    border-bottom: 1px solid rgba(0, 245, 255, 0.2);
-    padding: 12px 16px;
-  }
-
-  .th {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.65rem;
-    letter-spacing: 0.15em;
-    color: var(--neon-cyan);
-    text-transform: uppercase;
-  }
-
-  .table-body { overflow-y: visible; }
-
-  .station-row {
-    display: grid;
-    grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr;
-    gap: 0;
-    padding: 14px 16px;
-    border-bottom: 1px solid rgba(0, 245, 255, 0.05);
-    transition: all 0.2s;
-    cursor: default;
-    position: relative;
-    animation: rowFadeIn 0.4s ease forwards;
-    opacity: 0;
-  }
-
-  @keyframes rowFadeIn {
-    from { opacity: 0; transform: translateX(-10px); }
-    to { opacity: 1; transform: translateX(0); }
-  }
-
-  .station-row:hover {
-    background: rgba(0, 245, 255, 0.05);
-    border-left: 2px solid var(--neon-cyan);
-    box-shadow: inset 4px 0 20px rgba(0, 245, 255, 0.05);
-  }
-
-  .station-row.llanes-row {
-    background: rgba(0, 128, 255, 0.06);
-    border-left: 2px solid var(--neon-blue);
-  }
-
-  .station-row.llanes-row:hover {
-    background: rgba(0, 128, 255, 0.12);
-    border-left: 2px solid var(--neon-blue);
-    box-shadow: inset 4px 0 20px rgba(0, 128, 255, 0.08);
-  }
-
-  .rank {
-    position: absolute;
-    left: 4px; top: 50%;
-    transform: translateY(-50%);
-    font-size: 0.55rem;
-    color: rgba(0, 245, 255, 0.2);
-    font-family: 'Orbitron', sans-serif;
-  }
-
-  .cell { font-size: 0.82rem; display: flex; align-items: center; }
-
-  .cell-name { flex-direction: column; align-items: flex-start; }
-  .cell-name .name { color: #fff; font-size: 0.85rem; line-height: 1.3; }
-  .cell-name .brand { font-size: 0.7rem; color: var(--text-dim); margin-top: 2px; }
-
-  .cell-town { color: var(--neon-cyan); font-size: 0.8rem; }
-  .cell-town.is-llanes { color: var(--neon-blue); font-weight: bold; }
-  .cell-town.is-llanes::after { content: ' ★'; font-size: 0.6rem; }
-
-  .price-badge {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.95rem;
-    font-weight: 700;
-    padding: 4px 10px;
-    border-radius: 2px;
-  }
-
-  .price-1 { color: var(--neon-green); text-shadow: 0 0 8px var(--neon-green); background: rgba(0,255,136,0.08); border: 1px solid rgba(0,255,136,0.3); }
-  .price-2 { color: #aaff00; text-shadow: 0 0 6px #aaff00; background: rgba(170,255,0,0.06); border: 1px solid rgba(170,255,0,0.2); }
-  .price-3 { color: var(--neon-yellow); text-shadow: 0 0 6px var(--neon-yellow); background: rgba(255,221,0,0.06); border: 1px solid rgba(255,221,0,0.2); }
-  .price-avg { color: #ddd; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); }
-  .price-high { color: var(--neon-red); text-shadow: 0 0 6px var(--neon-red); background: rgba(255,51,102,0.06); border: 1px solid rgba(255,51,102,0.2); }
-
-  .schedule { color: var(--text-dim); font-size: 0.72rem; }
-
-  /* LOADING */
-  .loading-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 80px 20px;
-    gap: 20px;
-  }
-
-  .loader-ring {
-    width: 60px; height: 60px;
-    border: 2px solid rgba(0, 245, 255, 0.1);
-    border-top: 2px solid var(--neon-cyan);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    box-shadow: 0 0 20px rgba(0, 245, 255, 0.3);
-  }
-
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  .loading-text {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.8rem;
-    letter-spacing: 0.2em;
-    color: var(--text-dim);
-    animation: loadingPulse 1.5s ease-in-out infinite;
-  }
-
-  @keyframes loadingPulse {
-    0%, 100% { opacity: 0.5; }
-    50% { opacity: 1; }
-  }
-
-  /* ERROR */
-  .error-state {
-    text-align: center;
-    padding: 60px 20px;
-    color: var(--neon-red);
-  }
-
-  .error-state h3 {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1rem;
-    margin-bottom: 10px;
-  }
-
-  .error-state p {
-    font-size: 0.8rem;
-    color: var(--text-dim);
-    max-width: 400px;
-    margin: 0 auto;
-  }
-
-  /* NO DATA */
-  .no-data {
-    text-align: center;
-    padding: 40px;
-    color: var(--text-dim);
-    font-size: 0.85rem;
-  }
-
-  /* CORNER DECORATIONS */
-  .corner-deco {
-    position: absolute;
-    width: 20px; height: 20px;
-    border-color: var(--neon-cyan);
-    border-style: solid;
-    opacity: 0.4;
-  }
-  .corner-deco.tl { top: 0; left: 0; border-width: 2px 0 0 2px; }
-  .corner-deco.tr { top: 0; right: 0; border-width: 2px 2px 0 0; }
-  .corner-deco.bl { bottom: 0; left: 0; border-width: 0 0 2px 2px; }
-  .corner-deco.br { bottom: 0; right: 0; border-width: 0 2px 2px 0; }
-
-  /* LLANES BADGE */
-  .llanes-badge {
-    display: inline-block;
-    background: rgba(0, 128, 255, 0.15);
-    border: 1px solid rgba(0, 128, 255, 0.4);
-    color: var(--neon-blue);
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.6rem;
-    letter-spacing: 0.1em;
-    padding: 2px 6px;
-    margin-left: 6px;
-    border-radius: 2px;
-    vertical-align: middle;
-  }
-
-  /* FOOTER */
-  footer {
-    text-align: center;
-    padding: 25px 0 15px;
-    position: relative;
-    z-index: 10;
-  }
-
-  .footer-line {
-    width: 100%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(0,245,255,0.3), transparent);
-    margin-bottom: 15px;
-  }
-
-  .footer-text {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.8rem;
-    letter-spacing: 0.25em;
-    color: var(--neon-blue);
-    text-shadow: 0 0 10px var(--neon-blue);
-    animation: footerGlow 4s ease-in-out infinite;
-  }
-
-  @keyframes footerGlow {
-    0%, 100% { text-shadow: 0 0 5px var(--neon-blue); }
-    50% { text-shadow: 0 0 15px var(--neon-blue), 0 0 30px rgba(0, 128, 255, 0.5); }
-  }
-
-  .footer-sub {
-    font-size: 0.65rem;
-    color: rgba(0, 245, 255, 0.25);
-    letter-spacing: 0.1em;
-    margin-top: 6px;
-  }
-
-  /* STAT CARDS */
+  /* ─── STAT CARDS ─── */
   .stats-row {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 10px;
-    margin-bottom: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 8px;
+    margin-bottom: 12px;
   }
 
   .stat-card {
-    background: var(--panel-bg);
-    border: 1px solid rgba(0, 245, 255, 0.15);
-    border-radius: 4px;
-    padding: 14px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
+    background:var(--panel);
+    border:1px solid rgba(0,245,255,.14);
+    border-radius:4px;
+    padding:12px 8px;
+    text-align:center;
+    position:relative; overflow:hidden;
+    backdrop-filter:blur(8px);
   }
 
   .stat-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
-    box-shadow: 0 0 8px var(--neon-cyan);
+    content:''; position:absolute;
+    top:0; left:0; right:0; height:2px;
+    background:linear-gradient(90deg,transparent,var(--cyan),transparent);
+    box-shadow:0 0 8px var(--cyan);
   }
 
   .stat-label {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.55rem;
-    letter-spacing: 0.15em;
-    color: var(--text-dim);
-    text-transform: uppercase;
-    display: block;
-    margin-bottom: 8px;
+    font-family:'Orbitron',sans-serif;
+    font-size: clamp(0.5rem, 1.8vw, 0.55rem);
+    letter-spacing:.1em; color:var(--dim);
+    display:block; margin-bottom:6px;
+    text-transform:uppercase;
   }
 
   .stat-value {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: var(--neon-cyan);
-    text-shadow: 0 0 10px var(--neon-cyan);
+    font-family:'Orbitron',sans-serif;
+    font-size: clamp(1rem, 3.5vw, 1.3rem);
+    font-weight:700; color:var(--cyan);
+    text-shadow:0 0 10px var(--cyan);
   }
 
-  .stat-value.green { color: var(--neon-green); text-shadow: 0 0 10px var(--neon-green); }
-  .stat-value.red { color: var(--neon-red); text-shadow: 0 0 10px var(--neon-red); }
+  .stat-value.g { color:var(--green); text-shadow:0 0 10px var(--green); }
+  .stat-value.r { color:var(--red);   text-shadow:0 0 10px var(--red);   }
 
-  /* SCROLL HINT */
+  /* ─── FILTER BAR ─── */
+  .filter-bar {
+    display:flex; flex-wrap:wrap; gap:8px;
+    margin-bottom:10px;
+  }
+
+  .filter-btn {
+    background:transparent;
+    border:1px solid rgba(0,245,255,.28);
+    color:var(--dim);
+    font-family:'Orbitron',sans-serif;
+    font-size: clamp(0.58rem, 2.2vw, 0.7rem);
+    letter-spacing:.08em;
+    padding:7px 14px;
+    cursor:pointer; transition:all .25s; border-radius:2px;
+    white-space:nowrap;
+  }
+
+  .filter-btn:hover, .filter-btn.active {
+    background:rgba(0,245,255,.1);
+    border-color:var(--cyan); color:var(--cyan);
+    box-shadow:0 0 10px rgba(0,245,255,.25);
+  }
+
+  /* ─── SCROLL HINT ─── */
   .scroll-hint {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 10px;
-    padding: 8px 16px;
-    color: var(--text-dim);
-    font-size: 0.75rem;
-    letter-spacing: 0.12em;
-    animation: hintPulse 2.5s ease-in-out infinite;
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    margin-bottom:8px;
+    font-size: clamp(0.62rem, 2.5vw, 0.75rem);
+    letter-spacing:.1em; color:var(--dim);
+    animation:hintPulse 2.5s ease-in-out infinite;
   }
 
-  .scroll-hint .arrow {
-    font-size: 1rem;
-    animation: bounce 1.5s ease-in-out infinite;
-    display: inline-block;
+  .scroll-hint .arr { display:inline-block; animation:arrowBounce 1.4s ease-in-out infinite; }
+  .scroll-hint .arr.left { animation-direction:reverse; }
+
+  @keyframes arrowBounce { 0%,100%{transform:translateX(0)} 50%{transform:translateX(5px)} }
+  @keyframes hintPulse   { 0%,100%{opacity:.5} 50%{opacity:1} }
+
+  /* ─── TABLA: full width con scroll horizontal propio ─── */
+  .table-zone {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+    background: var(--panel);
+    border-top:    1px solid rgba(0,245,255,.15);
+    border-bottom: 1px solid rgba(0,245,255,.15);
+    backdrop-filter: blur(10px);
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0,245,255,.4) rgba(0,245,255,.05);
   }
 
-  @keyframes bounce {
-    0%, 100% { transform: translateX(0); }
-    50% { transform: translateX(5px); }
+  .table-zone::-webkit-scrollbar { height:5px; }
+  .table-zone::-webkit-scrollbar-track { background:rgba(0,245,255,.05); }
+  .table-zone::-webkit-scrollbar-thumb { background:rgba(0,245,255,.4); border-radius:3px; }
+
+  .table-inner { min-width: 680px; width: 100%; }
+
+  .table-header {
+    display:grid;
+    grid-template-columns: 2fr 1.4fr 1fr 1.1fr 1.5fr;
+    background:rgba(0,245,255,.07);
+    border-bottom:1px solid rgba(0,245,255,.2);
+    padding:11px 16px;
+    position:sticky; top:0; z-index:5;
   }
 
-  @keyframes hintPulse {
-    0%, 100% { opacity: 0.5; }
-    50% { opacity: 1; }
+  .th {
+    font-family:'Orbitron',sans-serif;
+    font-size:.62rem; letter-spacing:.12em;
+    color:var(--cyan); text-transform:uppercase;
   }
 
-  /* Scrollbar global */
-  body::-webkit-scrollbar { width: 4px; }
-  body::-webkit-scrollbar-track { background: transparent; }
-  body::-webkit-scrollbar-thumb { background: rgba(0, 245, 255, 0.3); border-radius: 2px; }
-
-  /* Refresh btn */
-  .refresh-btn {
-    background: transparent;
-    border: 1px solid rgba(0, 245, 255, 0.3);
-    color: var(--text-dim);
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.65rem;
-    letter-spacing: 0.15em;
-    padding: 8px 14px;
-    cursor: pointer;
-    transition: all 0.3s;
-    border-radius: 2px;
+  .station-row {
+    display:grid;
+    grid-template-columns: 2fr 1.4fr 1fr 1.1fr 1.5fr;
+    padding:12px 16px;
+    border-bottom:1px solid rgba(0,245,255,.05);
+    transition:background .2s;
+    position:relative;
+    animation:rowIn .4s ease forwards;
+    opacity:0;
   }
 
-  .refresh-btn:hover {
-    border-color: var(--neon-cyan);
-    color: var(--neon-cyan);
-    box-shadow: 0 0 12px rgba(0, 245, 255, 0.2);
+  @keyframes rowIn { from{opacity:0;transform:translateX(-8px)} to{opacity:1;transform:translateX(0)} }
+
+  .station-row:hover { background:rgba(0,245,255,.04); border-left:2px solid var(--cyan); }
+  .station-row.ll    { background:rgba(0,128,255,.06); border-left:2px solid var(--blue); }
+  .station-row.ll:hover { background:rgba(0,128,255,.11); }
+
+  .rank {
+    position:absolute; left:3px; top:50%;
+    transform:translateY(-50%);
+    font-size:.5rem; color:rgba(0,245,255,.18);
+    font-family:'Orbitron',sans-serif;
   }
 
-  .refresh-btn.spinning .btn-icon { animation: spin 1s linear infinite; display: inline-block; }
+  .cell { font-size:.8rem; display:flex; align-items:center; padding-right:6px; }
+  .cell-name { flex-direction:column; align-items:flex-start; }
+  .cell-name .nm { color:#fff; font-size:.82rem; line-height:1.3; }
+  .cell-town { color:var(--cyan); font-size:.78rem; }
+  .cell-town.ll2 { color:var(--blue); font-weight:bold; }
+  .cell-town.ll2::after { content:' ★'; font-size:.58rem; }
 
-  @media (max-width: 700px) {
-    h1 { font-size: 1.8rem; }
-    .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .price-badge {
+    font-family:'Orbitron',sans-serif; font-size:.9rem; font-weight:700;
+    padding:3px 9px; border-radius:2px; white-space:nowrap;
   }
+
+  .p1 { color:var(--green); text-shadow:0 0 8px var(--green);  background:rgba(0,255,136,.08);  border:1px solid rgba(0,255,136,.3); }
+  .p2 { color:#aaff00;      text-shadow:0 0 6px #aaff00;       background:rgba(170,255,0,.06);  border:1px solid rgba(170,255,0,.2); }
+  .p3 { color:var(--yellow);text-shadow:0 0 6px var(--yellow); background:rgba(255,221,0,.06);  border:1px solid rgba(255,221,0,.2); }
+  .pa { color:#ccc;                                              background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);}
+  .ph { color:var(--red);   text-shadow:0 0 6px var(--red);    background:rgba(255,51,102,.06); border:1px solid rgba(255,51,102,.2);}
+
+  .sched { color:var(--dim); font-size:.7rem; }
+
+  .llbadge {
+    display:inline-block;
+    background:rgba(0,128,255,.15); border:1px solid rgba(0,128,255,.4);
+    color:var(--blue); font-family:'Orbitron',sans-serif;
+    font-size:.55rem; letter-spacing:.08em;
+    padding:2px 5px; margin-left:5px; border-radius:2px;
+    vertical-align:middle;
+  }
+
+  .loading-state {
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:70px 20px; gap:18px;
+  }
+
+  .loader-ring {
+    width:55px; height:55px;
+    border:2px solid rgba(0,245,255,.1);
+    border-top:2px solid var(--cyan); border-radius:50%;
+    animation:spin 1s linear infinite;
+    box-shadow:0 0 18px rgba(0,245,255,.3);
+  }
+
+  .loading-text {
+    font-family:'Orbitron',sans-serif; font-size:.75rem;
+    letter-spacing:.18em; color:var(--dim);
+    animation:pulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes pulse { 0%,100%{opacity:.5} 50%{opacity:1} }
+
+  .error-state { text-align:center; padding:50px 20px; color:var(--red); }
+  .error-state h3 { font-family:'Orbitron',sans-serif; font-size:.95rem; margin-bottom:10px; }
+  .error-state p  { font-size:.76rem; color:var(--dim); max-width:380px; margin:0 auto; }
+  .no-data { text-align:center; padding:40px; color:var(--dim); font-size:.82rem; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    position:relative; z-index:10;
+    text-align:center; padding:22px 16px 14px;
+    width:100%;
+  }
+
+  .fline {
+    height:1px;
+    background:linear-gradient(90deg,transparent,rgba(0,245,255,.3),transparent);
+    margin-bottom:13px;
+  }
+
+  .footer-text {
+    font-family:'Orbitron',sans-serif;
+    font-size: clamp(0.7rem, 3vw, 0.85rem);
+    letter-spacing:.22em; color:var(--blue);
+    text-shadow:0 0 10px var(--blue);
+    animation:fglow 4s ease-in-out infinite;
+  }
+
+  @keyframes fglow {
+    0%,100% { text-shadow:0 0 5px var(--blue); }
+    50%      { text-shadow:0 0 15px var(--blue),0 0 30px rgba(0,128,255,.5); }
+  }
+
+  .footer-sub {
+    font-size: clamp(0.5rem, 1.8vw, 0.62rem);
+    color:rgba(0,245,255,.22); letter-spacing:.08em; margin-top:5px;
+  }
+
+  body::-webkit-scrollbar { width:4px; }
+  body::-webkit-scrollbar-track { background:transparent; }
+  body::-webkit-scrollbar-thumb { background:rgba(0,245,255,.3); border-radius:2px; }
 </style>
 </head>
 <body>
 
-<div class="container">
+<!-- TODO LO DE ARRIBA: se adapta al ancho de pantalla -->
+<div class="page-wrap">
 
-  <!-- HEADER -->
   <header>
-    <div class="header-line"></div>
+    <div class="hline"></div>
     <h1>PRECIO DEL GASOIL</h1>
     <p class="subtitle">Oriente de Asturias &nbsp;·&nbsp; Actualización diaria</p>
-    <div class="header-line"></div>
+    <div class="hline"></div>
   </header>
 
-  <!-- STATUS BAR -->
   <div class="status-bar">
-    <div class="status-item">
-      <div class="status-dot"></div>
-      <span>SISTEMA ACTIVO</span>
-    </div>
-    <div class="status-item">
-      <span>FUENTE:</span>
-      <span class="status-value">MINISTERIO DE INDUSTRIA (MITECO)</span>
-    </div>
-    <div class="status-item">
-      <span>ACTUALIZADO:</span>
-      <span class="status-value" id="lastUpdate">—</span>
-    </div>
-    <div class="status-item">
-      <span>GASOIL A &nbsp;·&nbsp; ASTURIAS ORIENTAL</span>
-    </div>
-    <button class="refresh-btn" id="refreshBtn" onclick="loadData()">
-      <span class="btn-icon">⟳</span> ACTUALIZAR
-    </button>
+    <div class="status-item"><div class="status-dot"></div><span>ACTIVO</span></div>
+    <div class="status-item"><span>FUENTE:&nbsp;</span><span class="status-value">MITECO</span></div>
+    <div class="status-item"><span>ACTUALIZADO:&nbsp;</span><span class="status-value" id="lastUpdate">—</span></div>
+    <div class="status-item">GASOIL A · ASTURIAS OR.</div>
+    <button class="refresh-btn" id="refreshBtn" onclick="loadData()"><span class="ico">⟳</span> ACTUALIZAR</button>
   </div>
 
-  <!-- STATS -->
   <div class="stats-row" id="statsRow" style="display:none;">
-    <div class="stat-card">
-      <span class="stat-label">Gasolineras</span>
-      <span class="stat-value" id="statCount">—</span>
-    </div>
-    <div class="stat-card">
-      <span class="stat-label">Precio mínimo</span>
-      <span class="stat-value green" id="statMin">—</span>
-    </div>
-    <div class="stat-card">
-      <span class="stat-label">Precio medio</span>
-      <span class="stat-value" id="statAvg">—</span>
-    </div>
-    <div class="stat-card">
-      <span class="stat-label">Precio máximo</span>
-      <span class="stat-value red" id="statMax">—</span>
-    </div>
-    <div class="stat-card">
-      <span class="stat-label">En Llanes</span>
-      <span class="stat-value" id="statLlanes">—</span>
-    </div>
+    <div class="stat-card"><span class="stat-label">Gasolineras</span><span class="stat-value" id="statCount">—</span></div>
+    <div class="stat-card"><span class="stat-label">Mínimo</span><span class="stat-value g" id="statMin">—</span></div>
+    <div class="stat-card"><span class="stat-label">Medio</span><span class="stat-value" id="statAvg">—</span></div>
+    <div class="stat-card"><span class="stat-label">Máximo</span><span class="stat-value r" id="statMax">—</span></div>
+    <div class="stat-card"><span class="stat-label">En Llanes</span><span class="stat-value" id="statLlanes">—</span></div>
   </div>
 
-  <!-- FILTER -->
   <div class="filter-bar">
-    <button class="filter-btn active" onclick="setFilter('all', this)">TODAS</button>
-    <button class="filter-btn" onclick="setFilter('llanes', this)">LLANES</button>
-    <button class="filter-btn" onclick="setFilter('ribadesella', this)">RIBADESELLA</button>
-    <button class="filter-btn" onclick="setFilter('colunga', this)">COLUNGA</button>
-    <button class="filter-btn" onclick="setFilter('cabrales', this)">CABRALES</button>
+    <button class="filter-btn active" onclick="setFilter('all',this)">TODAS</button>
+    <button class="filter-btn" onclick="setFilter('llanes',this)">LLANES</button>
+    <button class="filter-btn" onclick="setFilter('ribadesella',this)">RIBADESELLA</button>
+    <button class="filter-btn" onclick="setFilter('colunga',this)">COLUNGA</button>
+    <button class="filter-btn" onclick="setFilter('cabrales',this)">CABRALES</button>
   </div>
 
-  <!-- SCROLL HINT -->
   <div class="scroll-hint">
-    <span class="arrow">←</span>
-    Desliza la pantalla para ver todo el contenido
-    <span class="arrow">→</span>
+    <span class="arr left">←</span>
+    Desliza para ver todo el contenido
+    <span class="arr">→</span>
   </div>
 
-  <!-- TABLE -->
-  <div class="table-scroll-outer">
-  <div class="table-wrapper" style="position:relative;">
-    <div class="corner-deco tl"></div>
-    <div class="corner-deco tr"></div>
-    <div class="corner-deco bl"></div>
-    <div class="corner-deco br"></div>
+</div><!-- /page-wrap -->
 
+<!-- TABLA: full width, scroll horizontal independiente -->
+<div class="table-zone">
+  <div class="table-inner">
     <div class="table-header">
       <div class="th">ESTACIÓN DE SERVICIO</div>
       <div class="th">MUNICIPIO</div>
@@ -630,241 +448,183 @@
       <div class="th">HORARIO</div>
       <div class="th">DIRECCIÓN</div>
     </div>
-
-    <div class="table-body" id="tableBody">
+    <div id="tableBody">
       <div class="loading-state">
         <div class="loader-ring"></div>
         <div class="loading-text">CARGANDO DATOS...</div>
       </div>
     </div>
-  </div><!-- /table-scroll-outer -->
-
+  </div>
 </div>
 
-<!-- FOOTER -->
 <footer>
-  <div class="footer-line"></div>
+  <div class="fline"></div>
   <div class="footer-text">WEB DE JAVI._TJ</div>
   <div class="footer-sub">DATOS OFICIALES · MINISTERIO PARA LA TRANSICIÓN ECOLÓGICA Y EL RETO DEMOGRÁFICO</div>
 </footer>
 
 <script>
-// Municipios del Oriente de Asturias (Asturias = código provincia 33)
-// Municipios objetivo: Llanes, Ribadesella, Colunga, Caravia, Cabrales, Parres (Arriondas),
-// Onís, Peñamellera Alta, Peñamellera Baja, Ribadedeva, Cangas de Onís, Piloña
-const MUNICIPIOS_ORIENTE = [
-  'LLANES', 'RIBADESELLA', 'COLUNGA', 'CARAVIA', 'CABRALES',
-  'PARRES', 'ONÍS', 'ONIS', 'PEÑAMELLERA ALTA', 'PEÑAMELLERA BAJA',
-  'PENAMELLERA ALTA', 'PENAMELLERA BAJA', 'RIBADEDEVA', 'CANGAS DE ONÍS',
-  'CANGAS DE ONIS', 'PILOÑA', 'PILONA', 'AMIEVA', 'CASO', 'PONGA',
-  'NAVA', 'VILLAVICIOSA', 'SARIEGO', 'BIMENES', 'LAVIANA', 'SAN MARTÍN DEL REY AURELIO',
-  'ARRIONDAS'
+const MUNICIPIOS = [
+  'LLANES','RIBADESELLA','COLUNGA','CARAVIA','CABRALES',
+  'PARRES','ONIS','PENAMELLERA ALTA','PENAMELLERA BAJA',
+  'RIBADEDEVA','CANGAS DE ONIS','PILONA','AMIEVA','CASO',
+  'PONGA','NAVA','VILLAVICIOSA','SARIEGO','ARRIONDAS'
 ];
 
-const PROXY_URL = 'https://corsproxy.io/?';
-const API_BASE = 'https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/FiltroProvincia/33';
+const API   = 'https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/FiltroProvincia/33';
+const PROXY = 'https://corsproxy.io/?';
 
 let allStations = [];
-let currentFilter = 'all';
 
-function normalize(str) {
-  if (!str) return '';
-  return str.toUpperCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .trim();
+function norm(s) {
+  if (!s) return '';
+  return s.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
 }
 
-function isOriente(municipio) {
-  const norm = normalize(municipio);
-  return MUNICIPIOS_ORIENTE.some(m => normalize(m) === norm || norm.includes(normalize(m)));
+function isOriente(m) {
+  const n = norm(m);
+  return MUNICIPIOS.some(x => n === x || n.includes(x));
 }
 
-function isLlanes(municipio) {
-  return normalize(municipio) === 'LLANES';
+function parsePrice(s) {
+  if (!s || !s.trim()) return null;
+  const v = parseFloat(s.replace(',','.'));
+  return isNaN(v) ? null : v;
 }
 
-function parsePrice(str) {
-  if (!str || str.trim() === '') return null;
-  return parseFloat(str.replace(',', '.'));
-}
-
-function priceClass(price, min, max, avg) {
-  if (!price) return 'price-avg';
-  const range = max - min;
-  if (range < 0.01) return 'price-avg';
-  const pos = (price - min) / range;
-  if (pos < 0.2) return 'price-1';
-  if (pos < 0.4) return 'price-2';
-  if (pos < 0.6) return 'price-avg';
-  if (pos < 0.8) return 'price-3';
-  return 'price-high';
+function pClass(p, mn, mx) {
+  if (!p) return 'pa';
+  const rng = mx - mn;
+  if (rng < 0.005) return 'pa';
+  const pos = (p - mn) / rng;
+  if (pos < 0.20) return 'p1';
+  if (pos < 0.40) return 'p2';
+  if (pos < 0.65) return 'pa';
+  if (pos < 0.82) return 'p3';
+  return 'ph';
 }
 
 async function loadData() {
-  const body = document.getElementById('tableBody');
-  const statsRow = document.getElementById('statsRow');
-  const refreshBtn = document.getElementById('refreshBtn');
-  const lastUpdate = document.getElementById('lastUpdate');
+  const body  = document.getElementById('tableBody');
+  const stats = document.getElementById('statsRow');
+  const btn   = document.getElementById('refreshBtn');
+  const upd   = document.getElementById('lastUpdate');
 
-  refreshBtn.classList.add('spinning');
+  btn.classList.add('spinning');
   body.innerHTML = `<div class="loading-state"><div class="loader-ring"></div><div class="loading-text">CARGANDO DATOS DEL MINISTERIO...</div></div>`;
-  statsRow.style.display = 'none';
+  stats.style.display = 'none';
 
   try {
-    // Try direct API first, then CORS proxy
     let data = null;
-    const urls = [
-      API_BASE,
-      PROXY_URL + encodeURIComponent(API_BASE)
-    ];
-
-    for (const url of urls) {
+    for (const url of [API, PROXY + encodeURIComponent(API)]) {
       try {
-        const res = await fetch(url, { signal: AbortSignal.timeout(10000) });
-        if (res.ok) {
-          data = await res.json();
-          break;
-        }
-      } catch(e) { /* try next */ }
+        const r = await fetch(url, { signal: AbortSignal.timeout(12000) });
+        if (r.ok) { data = await r.json(); break; }
+      } catch(e) { /* siguiente */ }
     }
 
-    if (!data || !data.ListaEESSPrecio) throw new Error('No se pudieron obtener datos');
+    if (!data?.ListaEESSPrecio) throw new Error('Sin datos del servidor');
 
-    // Filter eastern Asturias
     allStations = data.ListaEESSPrecio
       .filter(s => isOriente(s['Municipio']))
-      .filter(s => {
-        const p = parsePrice(s['Precio Gasoleo A']);
-        return p !== null && p > 0.5;
-      })
       .map(s => ({
-        nombre: s['Rótulo'] || 'Sin nombre',
+        nombre:    s['Rótulo'] || 'Sin nombre',
         municipio: s['Municipio'] || '',
         direccion: s['Dirección'] || '',
-        horario: s['Horario'] || '—',
-        precio: parsePrice(s['Precio Gasoleo A']),
-        lat: s['Latitud'],
-        lng: s['Longitud (WGS84)'],
-        llanes: isLlanes(s['Municipio'])
-      }));
+        horario:   s['Horario'] || '—',
+        precio:    parsePrice(s['Precio Gasoleo A']),
+        llanes:    norm(s['Municipio']) === 'LLANES'
+      }))
+      .filter(s => s.precio && s.precio > 0.5);
 
-    // Sort: Llanes first, then by price
-    allStations.sort((a, b) => {
-      if (a.llanes && !b.llanes) return -1;
-      if (!a.llanes && b.llanes) return 1;
+    allStations.sort((a,b) => {
+      if (a.llanes !== b.llanes) return a.llanes ? -1 : 1;
       return a.precio - b.precio;
     });
 
-    lastUpdate.textContent = new Date().toLocaleString('es-ES', {
-      day: '2-digit', month: '2-digit', year: 'numeric',
-      hour: '2-digit', minute: '2-digit'
+    upd.textContent = new Date().toLocaleString('es-ES',{
+      day:'2-digit', month:'2-digit', year:'numeric',
+      hour:'2-digit', minute:'2-digit'
     });
 
-    updateStats(allStations);
-    renderTable(allStations);
-    statsRow.style.display = 'grid';
-
-    // Auto-refresh every hour
+    renderAll(allStations);
+    stats.style.display = 'grid';
     setTimeout(loadData, 3600000);
 
-  } catch (err) {
+  } catch(err) {
     body.innerHTML = `
       <div class="error-state">
         <h3>⚠ ERROR DE CONEXIÓN</h3>
         <p>No se pudo conectar con la API del Ministerio.<br>
-        Verifica tu conexión e intenta de nuevo.<br><br>
-        <small style="color:rgba(255,51,102,0.5)">${err.message}</small></p>
+        Revisa tu conexión e inténtalo de nuevo.<br><br>
+        <small style="color:rgba(255,51,102,.5)">${err.message}</small></p>
         <br>
         <button class="filter-btn" onclick="loadData()" style="margin:0 auto;display:block;">REINTENTAR</button>
       </div>`;
   }
-
-  refreshBtn.classList.remove('spinning');
+  btn.classList.remove('spinning');
 }
 
-function updateStats(stations) {
-  if (!stations.length) return;
-  const prices = stations.map(s => s.precio).filter(Boolean);
-  const min = Math.min(...prices);
-  const max = Math.max(...prices);
-  const avg = prices.reduce((a, b) => a + b, 0) / prices.length;
-  const llanesCount = stations.filter(s => s.llanes).length;
-
-  document.getElementById('statCount').textContent = stations.length;
-  document.getElementById('statMin').textContent = min.toFixed(3) + ' €';
-  document.getElementById('statAvg').textContent = avg.toFixed(3) + ' €';
-  document.getElementById('statMax').textContent = max.toFixed(3) + ' €';
-  document.getElementById('statLlanes').textContent = llanesCount + ' est.';
+function renderAll(list) {
+  updateStats(list);
+  renderTable(list);
 }
 
-function renderTable(stations) {
+function updateStats(list) {
+  if (!list.length) return;
+  const prices = list.map(s=>s.precio).filter(Boolean);
+  const mn = Math.min(...prices), mx = Math.max(...prices);
+  const avg = prices.reduce((a,b)=>a+b,0)/prices.length;
+  document.getElementById('statCount').textContent  = list.length;
+  document.getElementById('statMin').textContent    = mn.toFixed(3)+' €';
+  document.getElementById('statAvg').textContent    = avg.toFixed(3)+' €';
+  document.getElementById('statMax').textContent    = mx.toFixed(3)+' €';
+  document.getElementById('statLlanes').textContent = list.filter(s=>s.llanes).length+' est.';
+}
+
+function renderTable(list) {
   const body = document.getElementById('tableBody');
-
-  if (!stations.length) {
-    body.innerHTML = `<div class="no-data">No se encontraron gasolineras para este filtro.</div>`;
+  if (!list.length) {
+    body.innerHTML = `<div class="no-data">No hay gasolineras para este filtro.</div>`;
     return;
   }
-
-  const prices = stations.map(s => s.precio).filter(Boolean);
-  const min = Math.min(...prices);
-  const max = Math.max(...prices);
-  const avg = prices.reduce((a, b) => a + b, 0) / prices.length;
+  const prices = list.map(s=>s.precio).filter(Boolean);
+  const mn = Math.min(...prices), mx = Math.max(...prices);
 
   let html = '';
-  stations.forEach((s, i) => {
-    const pc = priceClass(s.precio, min, max, avg);
-    const isLl = s.llanes;
-    const delay = Math.min(i * 0.04, 1.5);
-    const shortAddr = s.direccion.length > 28 ? s.direccion.substring(0, 28) + '…' : s.direccion;
-    const shortHorario = s.horario.length > 15 ? s.horario.substring(0, 15) + '…' : s.horario;
-
+  list.forEach((s,i) => {
+    const pc = pClass(s.precio, mn, mx);
+    const dl = Math.min(i*0.035, 1.4).toFixed(2);
+    const adr = s.direccion.length > 30 ? s.direccion.slice(0,30)+'…' : s.direccion;
+    const hor = s.horario.length   > 14 ? s.horario.slice(0,14)+'…'   : s.horario;
     html += `
-    <div class="station-row ${isLl ? 'llanes-row' : ''}" style="animation-delay:${delay}s">
+    <div class="station-row${s.llanes?' ll':''}" style="animation-delay:${dl}s">
       <span class="rank">#${i+1}</span>
       <div class="cell cell-name">
-        <span class="name">${s.nombre}${isLl ? '<span class="llanes-badge">LLANES</span>' : ''}</span>
+        <span class="nm">${s.nombre}${s.llanes?'<span class="llbadge">LLANES</span>':''}</span>
       </div>
-      <div class="cell cell-town ${isLl ? 'is-llanes' : ''}">${s.municipio}</div>
-      <div class="cell">
-        <span class="price-badge ${pc}">${s.precio ? s.precio.toFixed(3) + ' €' : 'N/D'}</span>
-      </div>
-      <div class="cell schedule">${shortHorario}</div>
-      <div class="cell schedule">${shortAddr}</div>
+      <div class="cell cell-town${s.llanes?' ll2':''}">${s.municipio}</div>
+      <div class="cell"><span class="price-badge ${pc}">${s.precio?s.precio.toFixed(3)+' €':'N/D'}</span></div>
+      <div class="cell sched">${hor}</div>
+      <div class="cell sched">${adr}</div>
     </div>`;
   });
-
   body.innerHTML = html;
 }
 
-function setFilter(filter, btn) {
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+function setFilter(f, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  currentFilter = filter;
-
-  let filtered;
-  switch(filter) {
-    case 'llanes':
-      filtered = allStations.filter(s => normalize(s.municipio) === 'LLANES');
-      break;
-    case 'ribadesella':
-      filtered = allStations.filter(s => normalize(s.municipio) === 'RIBADESELLA');
-      break;
-    case 'colunga':
-      filtered = allStations.filter(s => normalize(s.municipio) === 'COLUNGA');
-      break;
-    case 'cabrales':
-      filtered = allStations.filter(s => normalize(s.municipio) === 'CABRALES');
-      break;
-    default:
-      filtered = allStations;
-  }
-
-  updateStats(filtered);
-  renderTable(filtered);
+  const map = {
+    llanes:      s => norm(s.municipio)==='LLANES',
+    ribadesella: s => norm(s.municipio)==='RIBADESELLA',
+    colunga:     s => norm(s.municipio)==='COLUNGA',
+    cabrales:    s => norm(s.municipio)==='CABRALES',
+  };
+  const list = map[f] ? allStations.filter(map[f]) : allStations;
+  renderAll(list);
 }
 
-// Init
 loadData();
 </script>
 </body>
